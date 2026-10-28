@@ -16,6 +16,12 @@ function safeNext(next: string | null): string {
   return '/';
 }
 
+// 카카오톡·인스타그램 등 앱 안에서 열린 브라우저인가
+// (Google은 이런 브라우저에서 로그인을 막음: "403 disallowed_useragent")
+function isInAppBrowser(): boolean {
+  return /KAKAOTALK|Instagram|FBAN|FBAV|Line\/|NAVER\(inapp|DaumApps|everytimeApp|; wv\)/i.test(navigator.userAgent);
+}
+
 const devOptions: { role: Exclude<Role, 'guest'>; label: string; hint: string }[] = [
   { role: 'admin', label: '교수로 로그인', hint: '모든 글·댓글 삭제 가능' },
   { role: 'member', label: '승인 회원으로 로그인', hint: '토론 읽기·쓰기, 본인 글 삭제' },
@@ -36,8 +42,8 @@ export default function Login() {
     try {
       await action();
       navigate(next, { replace: true });
-    } catch {
-      setError('로그인하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '로그인하지 못했습니다. 잠시 후 다시 시도해 주세요.');
       setBusy(false);
     }
   }
@@ -77,9 +83,20 @@ export default function Login() {
             <p className="mt-5 text-sm text-gray-600">Firebase를 연결하면 이 버튼들은 Google 로그인 버튼으로 바뀝니다.</p>
           </>
         ) : (
-          <button type="button" className="btn-primary w-full" disabled={busy} onClick={() => run(() => authService.signIn())}>
-            Google 계정으로 로그인
-          </button>
+          <>
+            {isInAppBrowser() && (
+              <div role="alert" className="mb-4 rounded-md border-l-4 border-navy-800 bg-navy-50 px-4 py-3 text-navy-900">
+                카카오톡 등 앱 안의 브라우저에서는 Google 로그인이 막힙니다. 화면의 메뉴(⋮ 또는 공유 버튼)에서
+                <strong> 다른 브라우저로 열기</strong>(Chrome·Safari)를 선택해 주세요.
+              </div>
+            )}
+            <button type="button" className="btn-primary w-full" disabled={busy} onClick={() => run(() => authService.signIn())}>
+              {busy ? '로그인 창을 확인해 주세요…' : 'Google 계정으로 로그인'}
+            </button>
+            <p className="mt-4 text-sm text-gray-600">
+              버튼을 누르면 Google 로그인 창이 새로 열립니다. 창이 뜨지 않으면 브라우저의 팝업 차단을 풀어 주세요.
+            </p>
+          </>
         )}
         {error && (
           <div className="mt-4">
