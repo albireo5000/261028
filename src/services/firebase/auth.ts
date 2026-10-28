@@ -11,7 +11,7 @@ import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut as fbS
 import { doc, getDoc } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 import type { AuthService, UserProfile } from '../types';
-import { auth, db } from './app';
+import { auth, db, describeApiKey } from './app';
 
 const listeners = new Set<(user: UserProfile | null) => void>();
 let current: UserProfile | null = null;
@@ -92,7 +92,9 @@ function signInError(err: unknown): Error {
       return new Error(`API 키가 이 사이트 주소를 허용하지 않습니다. Google Cloud 콘솔의 API 키 "웹사이트 제한"을 확인해 주세요. (오류 코드: ${err.code})`);
     }
     const message = signInMessages[err.code] ?? '로그인하지 못했습니다.';
-    return new Error(`${message} (오류 코드: ${err.code})`);
+    // 키 문제일 때는 사이트에 들어간 키를 일부 보여 줘서 Netlify 값과 비교할 수 있게 함
+    const keyInfo = err.code.includes('api-key') ? ` 현재 사이트의 키: ${describeApiKey()}` : '';
+    return new Error(`${message}${keyInfo} (오류 코드: ${err.code})`);
   }
   return err instanceof Error ? err : new Error('로그인하지 못했습니다.');
 }

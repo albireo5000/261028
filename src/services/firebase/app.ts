@@ -25,6 +25,16 @@ const config = {
   appId: clean(import.meta.env.VITE_FIREBASE_APP_ID),
 };
 
+/**
+ * 문제 확인용: 사이트에 실제로 들어간 API 키를 일부만 보여 줌
+ * 정상이면 "AIzaSy…kWDA (39자)" 처럼 나옴 (웹 API 키는 원래 브라우저에 공개되는 값)
+ */
+export function describeApiKey(): string {
+  const key = config.apiKey;
+  if (!key) return '비어 있음';
+  return `${key.slice(0, 6)}…${key.slice(-4)} (${key.length}자)`;
+}
+
 /** .env 에 Firebase 값 4개가 모두 들어 있으면 true */
 export const hasFirebaseConfig = Boolean(config.apiKey && config.authDomain && config.projectId && config.appId);
 
