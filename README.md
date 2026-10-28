@@ -1,7 +1,8 @@
 # 연구실 홈페이지
 
 연구 성과·수업 자료를 정리하고, 승인된 대학원생과 연구 결과를 토론하는 사이트입니다.
-지금은 **가짜(목) 데이터**로 동작하는 MVP이며, 나중에 Firebase(Google 로그인 + Firestore)를 연결합니다.
+Firebase(Google 로그인 + Firestore)에 연결되어 있습니다.
+Firebase 설정값이 없는 환경에서는 자동으로 **가짜(목) 데이터**와 `개발용` 로그인 버튼으로 동작합니다.
 
 - 사이트 이름·소개 문구·연구 태그 바꾸기: `src/config/site.ts`
 - 샘플 데이터: `src/data/seed.ts` (모두 가상의 내용)
@@ -32,7 +33,12 @@ npm run dev
 
 화면에 나오는 주소(보통 `http://localhost:5173`)를 브라우저에서 엽니다. 끄려면 터미널에서 `Ctrl + C`.
 
-### 권한별 화면 확인
+### Firebase로 실행 / 가짜 데이터로 실행
+- 폴더에 `.env` 파일이 있고 값 4개가 채워져 있으면 → Firebase에 연결 (Google 로그인)
+- `.env` 가 없으면 → 가짜 데이터로 실행 (`.env.example` 을 복사해 `.env` 로 저장하고 값을 넣으면 Firebase로 바뀜)
+- `.env` 가 있어도 가짜 데이터로 보고 싶으면 `src/services/index.ts` 의 `FORCE_MOCK` 을 `true` 로
+
+### 권한별 화면 확인 (가짜 데이터 모드)
 상단 **로그인** → `개발용` 버튼 3개 중 하나를 누릅니다.
 
 | 버튼 | 토론 | 삭제 |
@@ -100,6 +106,8 @@ git push -u origin main
 5. **Deploy** 클릭 → 1~2분 뒤 `https://무작위이름.netlify.app` 주소가 생깁니다.
 6. 주소 이름 바꾸기: Site configuration > **Change site name**
 
+7. **Firebase 설정값 등록**: Site configuration > Environment variables 에 `VITE_FIREBASE_` 로 시작하는 4개를 넣고 다시 배포합니다. (자세한 순서는 `docs/NEXT-STEPS.md` 5단계)
+
 이제 GitHub에 `git push` 할 때마다 Netlify가 자동으로 다시 배포합니다.
 `/research/r1` 같은 주소에서 새로고침해도 404가 나지 않도록 `netlify.toml`에 설정해 두었습니다.
 
@@ -115,8 +123,9 @@ src/
   services/
     types.ts            데이터 모양과 서비스 약속(인터페이스)
     rules.ts            권한·글자 수 규칙
-    index.ts            ★ 서비스 입구. Firebase 연결 시 이 파일 한 줄만 바꿈
+    index.ts            ★ 서비스 입구. Firebase 설정값이 있으면 Firebase, 없으면 가짜 데이터
     mock/               가짜 데이터 구현 (localStorage 저장)
+    firebase/           Firebase 구현 (Google 로그인, Firestore)
   data/seed.ts          샘플 데이터
   context/AuthContext.tsx  로그인 상태 공유
 docs/

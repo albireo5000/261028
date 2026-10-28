@@ -14,6 +14,8 @@ Firebase 무료 요금제(Spark)는 **하루 읽기 5만 회, 쓰기 2만 회**�
 | `posts/{postId}/comments/{commentId}` | 자동 | `postId`, `body`, `authorUid`, `authorName`, `createdAt` | 승인 회원 | 승인 회원 |
 
 - 타입 정의는 `src/services/types.ts`와 같습니다.
+- `members` 문서 ID는 Google 이메일을 **소문자 그대로** 씁니다. 보안 규칙이 로그인한 이메일과 글자 하나까지 비교합니다.
+- `createdAt`은 `2026-09-15T09:00:00.000Z` 형식의 **문자열**로 통일합니다. 형식이 섞이면 최신순 정렬이 어긋납니다.
 - 자료 파일은 올리지 않고 `url`(Google Drive 공유 링크 등)만 저장합니다.
 - **승인되지 않은 사람**은 `members`에 문서가 없습니다. 로그인은 되지만 역할이 `pending`이 됩니다.
 - 글을 지울 때 댓글은 자동으로 지워지지 않습니다(Cloud Functions 미사용). 화면에서 댓글을 먼저 지우고 글을 지웁니다.

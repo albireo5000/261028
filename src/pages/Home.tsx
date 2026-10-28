@@ -77,7 +77,7 @@ export default function Home() {
         </div>
         <div className="mt-4">
           {research === null ? (
-            <Loading />
+            !error && <Loading />
           ) : research.length === 0 ? (
             <Empty>아직 등록된 연구가 없습니다.</Empty>
           ) : (
@@ -108,7 +108,7 @@ export default function Home() {
           ) : !allowed ? (
             <Empty>토론 내용은 로그인한 승인 회원에게만 보입니다.</Empty>
           ) : posts === null ? (
-            <Loading />
+            !error && <Loading />
           ) : posts.length === 0 ? (
             <Empty>아직 토론 글이 없습니다.</Empty>
           ) : (
