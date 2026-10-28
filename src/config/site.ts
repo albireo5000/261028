@@ -20,7 +20,7 @@ export const site = {
   ],
 
   // 바닥글 "문의"에 보이는 연락처
-  contactEmail: 'albireo5000@gmail.com',
+  contactEmail: 'sypark@kmu.ac.kr',
 
   // 연구 목록에서 필터로 보여 줄 태그. 새 태그가 생기면 여기에 추가합니다.
   // (태그 목록을 데이터베이스에서 매번 읽지 않도록 설정 파일에 둡니다.)
