@@ -1,0 +1,130 @@
+// =============================================================
+// Firestore 보안 규칙 초안 (아직 배포하지 않음)
+//
+// 적용 방법: Firebase 콘솔 > Firestore Database > 규칙(Rules) 탭에
+//            이 내용을 붙여 넣고 "게시"를 누릅니다.
+//            게시 전에 같은 화면의 "규칙 플레이그라운드"로 꼭 시험해 보세요.
+//
+// 컬렉션
+//   members/{email}            승인 명단. 문서 ID = 이메일 주소. 필드: role('member'|'admin'), displayName
+//   research/{id}              연구 (누구나 읽기, admin만 쓰기)
+//   teaching/{id}              수업 자료 (누구나 읽기, admin만 쓰기)
+//   posts/{postId}             토론 글 (승인 회원만)
+//   posts/{postId}/comments/{commentId}  댓글 (승인 회원만)
+//
+// 글자 수 제한: 제목 100자, 본문·댓글 5000자 (src/services/rules.ts 의 LIMITS와 같게 유지)
+// =============================================================
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- 도우미 함수 ----------
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // 승인 회원: Google 이메일 인증이 끝났고, members 명단에 이메일이 있음
+    function isApproved() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/members/$(request.auth.token.email));
+    }
+
+    // 교수(관리자): 승인 회원이면서 명단의 role 이 'admin'
+    function isAdmin() {
+      return isApproved()
+        && get(/databases/$(database)/documents/members/$(request.auth.token.email)).data.role == 'admin';
+    }
+
+    // 문자열이고 길이가 1 ~ max 사이인가
+    function validText(value, max) {
+      return value is string && value.size() > 0 && value.size() <= max;
+    }
+
+    // ---------- 승인 명단 ----------
+    match /members/{email} {
+      // 본인 문서는 읽을 수 있어야 로그인 후 내 역할(승인 여부)을 확인할 수 있음
+      allow read: if signedIn()
+        && (request.auth.token.email == email || isAdmin());
+      // 승인·해제는 교수만 (처음 교수 본인 문서는 Firebase 콘솔에서 직접 만듦)
+      allow write: if isAdmin();
+    }
+
+    // ---------- 연구·수업 자료: 공개 읽기, 교수만 쓰기 ----------
+    match /research/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /teaching/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------- 토론 글 ----------
+    match /posts/{postId} {
+      allow read: if isApproved();
+
+      // 글쓰기: 작성자 칸이 본인이어야 하고, 댓글 수는 0으로 시작
+      allow create: if isApproved()
+        && request.resource.data.keys().hasOnly(
+             ['title', 'body', 'researchId', 'authorUid', 'authorName', 'createdAt', 'commentCount'])
+        && request.resource.data.authorUid == request.auth.uid
+        && validText(request.resource.data.title, 100)
+        && validText(request.resource.data.body, 5000)
+        && request.resource.data.commentCount == 0;
+
+      // 수정 ① 작성자 본인 또는 교수: 제목·본문·관련 연구만 바꿀 수 있음
+      // 수정 ② 승인 회원 누구나: 댓글을 달거나 지울 때 commentCount 만 ±1
+      allow update: if isApproved() && (
+        (
+          (resource.data.authorUid == request.auth.uid || isAdmin())
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'body', 'researchId'])
+          && validText(request.resource.data.title, 100)
+          && validText(request.resource.data.body, 5000)
+        ) || (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['commentCount'])
+          && (request.resource.data.commentCount == resource.data.commentCount + 1
+              || request.resource.data.commentCount == resource.data.commentCount - 1)
+          && request.resource.data.commentCount >= 0
+        )
+      );
+
+      allow delete: if isApproved()
+        && (resource.data.authorUid == request.auth.uid || isAdmin());
+
+      // ---------- 댓글 ----------
+      match /comments/{commentId} {
+        allow read: if isApproved();
+
+        allow create: if isApproved()
+          && request.resource.data.keys().hasOnly(
+               ['postId', 'body', 'authorUid', 'authorName', 'createdAt'])
+          && request.resource.data.authorUid == request.auth.uid
+          && request.resource.data.postId == postId
+          && validText(request.resource.data.body, 5000);
+
+        // 댓글 수정은 본인만, 본문만
+        allow update: if isApproved()
+          && resource.data.authorUid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['body'])
+          && validText(request.resource.data.body, 5000);
+
+        // 글 작성자도 자기 글을 지울 때 달린 댓글을 함께 지울 수 있어야 함
+        // (Cloud Functions를 쓰지 않으므로 화면에서 댓글을 먼저 지운 뒤 글을 지움)
+        allow delete: if isApproved() && (
+          resource.data.authorUid == request.auth.uid
+          || isAdmin()
+          || get(/databases/$(database)/documents/posts/$(postId)).data.authorUid == request.auth.uid
+        );
+      }
+    }
+
+    // 위에 없는 컬렉션은 모두 막음 (기본값이지만 명시)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

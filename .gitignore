@@ -1,0 +1,12 @@
+# 설치된 패키지(용량이 커서 GitHub에 올리지 않음)
+node_modules/
+# 빌드 결과물(Netlify가 직접 만듦)
+dist/
+# 실제 Firebase 키가 들어갈 파일 — 절대 GitHub에 올리지 않음
+.env
+.env.local
+.env.*.local
+# 기타
+*.log
+.DS_Store
+.netlify/

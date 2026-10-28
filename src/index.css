@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 기본 글자: 16px 이상, 줄간격 1.7 */
+@layer base {
+  html {
+    font-size: 16px;
+  }
+  body {
+    @apply bg-white font-sans text-gray-900 antialiased;
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.7;
+    word-break: keep-all; /* 한국어 단어 중간에서 줄이 바뀌지 않게 */
+  }
+  /* 키보드로 이동할 때 현재 위치가 잘 보이도록 */
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-navy-600;
+  }
+}
+
+/* 자주 쓰는 모양을 이름으로 묶어 둠 */
+@layer components {
+  .page-title {
+    @apply text-2xl font-bold leading-snug text-navy-900 sm:text-3xl;
+  }
+  .section-title {
+    @apply text-xl font-bold text-navy-900;
+  }
+  .btn-primary {
+    @apply rounded-md bg-navy-800 px-4 py-2 font-medium text-white transition-colors hover:bg-navy-700 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-secondary {
+    @apply rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-800 transition-colors hover:border-navy-600 hover:text-navy-800 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-danger {
+    @apply rounded-md border border-red-300 bg-white px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50;
+  }
+  .label {
+    @apply mb-1 block font-medium text-gray-900;
+  }
+  .input {
+    @apply block w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:border-navy-600 focus:outline-none focus:ring-2 focus:ring-navy-200;
+  }
+}

@@ -1,0 +1,15 @@
+# Netlify 배포 설정
+[build]
+  # 사이트를 만드는 명령
+  command = "npm run build"
+  # 완성된 사이트 파일이 들어가는 폴더
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# 어떤 주소로 들어와도 index.html을 보여 줌 (새로고침 시 404 방지)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,27 @@
+// 연구 목록 카드 1개
+import { Link } from 'react-router-dom';
+import type { Research } from '../services';
+import Card from './Card';
+import Tag from './Tag';
+
+export default function ResearchCard({ research }: { research: Research }) {
+  return (
+    <Card className="transition-shadow hover:shadow-md">
+      <p className="text-sm text-gray-600">
+        {research.year} · {research.authors.join(', ')}
+      </p>
+      <h3 className="mt-1 text-lg font-bold text-gray-900">
+        {/* 제목 링크를 누르면 상세 화면으로 이동 */}
+        <Link to={`/research/${research.id}`} className="hover:text-navy-700 hover:underline">
+          {research.title}
+        </Link>
+      </h3>
+      <p className="mt-2 line-clamp-3 text-gray-700">{research.summary}</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {research.tags.map((t) => (
+          <Tag key={t}>{t}</Tag>
+        ))}
+      </div>
+    </Card>
+  );
+}
