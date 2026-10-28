@@ -8,11 +8,12 @@ const labels: Record<Role, string> = {
   admin: '교수',
 };
 
+// 흰 바탕(로그인 화면)과 남색 바탕(상단 바) 모두에서 잘 보이는 색
 const colors: Record<Role, string> = {
-  guest: 'bg-gray-100 text-gray-700',
-  pending: 'bg-amber-100 text-amber-900',
-  member: 'bg-navy-100 text-navy-800',
-  admin: 'bg-navy-800 text-white',
+  guest: 'bg-white text-navy-700 ring-1 ring-inset ring-navy-200',
+  pending: 'bg-white text-navy-600 ring-1 ring-inset ring-navy-300',
+  member: 'bg-navy-100 text-navy-900',
+  admin: 'bg-white text-navy-900 font-bold',
 };
 
 export default function RoleBadge({ role }: { role: Role }) {

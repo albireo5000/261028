@@ -56,7 +56,7 @@ export default function Login() {
         {authService.devSignIn ? (
           <>
             <div className="flex items-center gap-2">
-              <span className="rounded bg-amber-100 px-2 py-0.5 text-sm font-bold text-amber-900">개발용</span>
+              <span className="rounded border border-dashed border-navy-600 px-2 py-0.5 text-sm font-bold text-navy-700">개발용</span>
               <p className="text-sm text-gray-700">가상 계정으로 권한별 화면을 확인합니다.</p>
             </div>
             <ul className="mt-5 space-y-3">
@@ -69,7 +69,7 @@ export default function Login() {
                     onClick={() => run(() => authService.devSignIn!(o.role))}
                   >
                     {o.label}
-                    <span className="block text-sm font-normal text-navy-100">{o.hint}</span>
+                    <span className="block text-sm font-normal text-navy-200">{o.hint}</span>
                   </button>
                 </li>
               ))}
@@ -89,7 +89,7 @@ export default function Login() {
       </Card>
 
       <p className="mt-6 text-center">
-        <Link to="/" className="text-navy-700 underline underline-offset-4">
+        <Link to="/" className="text-link">
           홈으로 돌아가기
         </Link>
       </p>

@@ -36,17 +36,30 @@ export default function Home() {
   }, [allowed]);
 
   return (
-    <div className="space-y-12">
-      {/* 연구실 소개 */}
-      <section aria-labelledby="intro-title">
-        <h1 id="intro-title" className="text-3xl font-bold text-navy-900 sm:text-4xl">
-          {site.name}
-        </h1>
-        <p className="mt-2 text-lg text-navy-700">{site.tagline}</p>
-        <div className="mt-5 max-w-3xl space-y-3 text-gray-800">
-          {site.intro.map((p) => (
-            <p key={p}>{p}</p>
-          ))}
+    <div className="space-y-14">
+      {/* 연구실 소개: 화면 폭 전체를 채우는 남색 배너 */}
+      <section aria-labelledby="intro-title" className="on-dark full-bleed -mt-8 bg-navy-800 text-white sm:-mt-10">
+        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
+          {site.eyebrow && (
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-navy-200">{site.eyebrow}</p>
+          )}
+          <h1 id="intro-title" className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
+            {site.name}
+          </h1>
+          <p className="mt-4 text-lg text-navy-100 sm:text-xl">{site.tagline}</p>
+          <div className="mt-6 max-w-2xl space-y-3 text-navy-100">
+            {site.intro.map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/research" className="btn-light">
+              연구 보기
+            </Link>
+            <Link to="/teaching" className="btn-outline-light">
+              수업 자료
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -54,11 +67,11 @@ export default function Home() {
 
       {/* 최근 연구 */}
       <section aria-labelledby="recent-research">
-        <div className="flex items-baseline justify-between">
+        <div className="section-head">
           <h2 id="recent-research" className="section-title">
             최근 연구
           </h2>
-          <Link to="/research" className="text-navy-700 underline underline-offset-4">
+          <Link to="/research" className="text-link">
             전체 보기
           </Link>
         </div>
@@ -79,12 +92,12 @@ export default function Home() {
 
       {/* 최근 토론 */}
       <section aria-labelledby="recent-posts">
-        <div className="flex items-baseline justify-between">
+        <div className="section-head">
           <h2 id="recent-posts" className="section-title">
             최근 토론
           </h2>
           {allowed && (
-            <Link to="/discussion" className="text-navy-700 underline underline-offset-4">
+            <Link to="/discussion" className="text-link">
               전체 보기
             </Link>
           )}

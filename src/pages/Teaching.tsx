@@ -55,13 +55,15 @@ export default function Teaching() {
         ) : (
           groupByCourse(items).map(([course, list]) => (
             <section key={course} aria-label={course}>
-              <h2 className="section-title">{course}</h2>
+              <div className="section-head">
+                <h2 className="section-title">{course}</h2>
+              </div>
               <ul className="mt-4 grid gap-4 md:grid-cols-2">
                 {list.map((m) => (
                   <li key={m.id}>
                     <Card className="h-full">
-                      <p className="text-sm text-gray-600">{m.semester}</p>
-                      <h3 className="mt-1 text-lg font-bold text-gray-900">{m.title}</h3>
+                      <p className="text-sm font-medium text-navy-600">{m.semester}</p>
+                      <h3 className="mt-1 text-lg font-bold leading-snug text-navy-900">{m.title}</h3>
                       <p className="mt-2 text-gray-700">{m.description}</p>
                       <p className="mt-3">
                         <ExternalLink href={m.url}>자료 열기</ExternalLink>

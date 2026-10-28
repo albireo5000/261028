@@ -8,7 +8,7 @@
     font-size: 16px;
   }
   body {
-    @apply bg-white font-sans text-gray-900 antialiased;
+    @apply bg-white font-sans text-gray-800 antialiased;
     font-size: 1.0625rem; /* 17px */
     line-height: 1.7;
     word-break: keep-all; /* 한국어 단어 중간에서 줄이 바뀌지 않게 */
@@ -17,29 +17,60 @@
   :focus-visible {
     @apply outline outline-2 outline-offset-2 outline-navy-600;
   }
+  /* 남색 바탕(상단 바, 홈 배너, 바닥글) 위에서는 흰색 테두리로 표시 */
+  .on-dark :focus-visible {
+    @apply outline-white;
+  }
 }
 
 /* 자주 쓰는 모양을 이름으로 묶어 둠 */
 @layer components {
+  /* 페이지 제목: 위에 짧은 남색 막대 */
   .page-title {
     @apply text-2xl font-bold leading-snug text-navy-900 sm:text-3xl;
   }
+  .page-title::before {
+    content: '';
+    @apply mb-4 block h-1 w-10 bg-navy-800;
+  }
   .section-title {
     @apply text-xl font-bold text-navy-900;
+  }
+  /* 구역 제목 줄: 아래에 옅은 남색 선 */
+  .section-head {
+    @apply flex items-baseline justify-between gap-4 border-b border-navy-100 pb-3;
+  }
+  .text-link {
+    @apply font-medium text-navy-700 underline decoration-navy-200 underline-offset-4 transition-colors hover:text-navy-900 hover:decoration-navy-700;
   }
   .btn-primary {
     @apply rounded-md bg-navy-800 px-4 py-2 font-medium text-white transition-colors hover:bg-navy-700 disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-secondary {
-    @apply rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-800 transition-colors hover:border-navy-600 hover:text-navy-800 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply rounded-md border border-navy-200 bg-white px-4 py-2 font-medium text-navy-800 transition-colors hover:border-navy-700 hover:bg-navy-50 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  /* 남색 바탕 위 버튼 */
+  .btn-light {
+    @apply rounded-md bg-white px-4 py-2 font-medium text-navy-900 transition-colors hover:bg-navy-100;
+  }
+  .btn-outline-light {
+    @apply rounded-md border border-white/40 px-4 py-2 font-medium text-white transition-colors hover:border-white hover:bg-white/10;
   }
   .btn-danger {
-    @apply rounded-md border border-red-300 bg-white px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50;
+    @apply rounded-md border border-red-200 bg-white px-3 py-1 text-sm font-medium text-red-700 transition-colors hover:border-red-400 hover:bg-red-50;
   }
   .label {
-    @apply mb-1 block font-medium text-gray-900;
+    @apply mb-1 block font-medium text-navy-900;
   }
   .input {
-    @apply block w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:border-navy-600 focus:outline-none focus:ring-2 focus:ring-navy-200;
+    @apply block w-full rounded-md border border-navy-200 bg-white px-3 py-2 text-base focus:border-navy-600 focus:outline-none focus:ring-2 focus:ring-navy-100;
+  }
+}
+
+/* 홈 배너처럼 화면 양 끝까지 꽉 채우는 띠 */
+@layer utilities {
+  .full-bleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
   }
 }

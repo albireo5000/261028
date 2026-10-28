@@ -13,11 +13,11 @@ const menu = [
   { to: '/discussion', label: '토론', end: false },
 ];
 
-// 현재 페이지 메뉴는 남색 밑줄로 표시
+// 현재 페이지 메뉴는 흰 글씨 + 흰 밑줄로 표시
 function navClass({ isActive }: { isActive: boolean }) {
   return [
     'block rounded px-3 py-2 text-base font-medium transition-colors',
-    isActive ? 'text-navy-800 underline decoration-2 underline-offset-8' : 'text-gray-700 hover:text-navy-800',
+    isActive ? 'text-white underline decoration-2 underline-offset-8' : 'text-navy-200 hover:text-white',
   ].join(' ');
 }
 
@@ -37,34 +37,36 @@ export default function Header() {
 
   const loginArea = loading ? null : user ? (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-gray-700">
-        <span className="font-medium text-gray-900">{user.displayName}</span>님
+      <span className="text-sm text-navy-200">
+        <span className="font-medium text-white">{user.displayName}</span>님
       </span>
       <RoleBadge role={role} />
-      <button type="button" onClick={handleSignOut} className="btn-secondary">
+      <button type="button" onClick={handleSignOut} className="btn-outline-light">
         로그아웃
       </button>
     </div>
   ) : (
     <Link
       to={`/login?next=${encodeURIComponent(location.pathname)}`}
-      className="btn-primary"
+      className="btn-light"
     >
       로그인
     </Link>
   );
 
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="on-dark bg-navy-900 text-white">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-        <Link to="/" className="text-xl font-bold text-navy-800">
+        <Link to="/" className="flex items-center gap-3 text-xl font-bold tracking-tight text-white">
+          {/* 사이트 표시용 작은 흰 사각형 (장식) */}
+          <span aria-hidden="true" className="h-6 w-1.5 rounded-sm bg-white" />
           {site.name}
         </Link>
 
         {/* 모바일에서만 보이는 메뉴 열기 버튼 */}
         <button
           type="button"
-          className="btn-secondary md:hidden"
+          className="btn-outline-light md:hidden"
           aria-expanded={open}
           aria-controls="main-menu"
           onClick={() => setOpen((v) => !v)}
@@ -89,7 +91,7 @@ export default function Header() {
 
       {/* 모바일 메뉴 (버튼을 눌렀을 때만 보임) */}
       {open && (
-        <nav id="main-menu" aria-label="주 메뉴" className="border-t border-gray-200 px-4 pb-4 md:hidden">
+        <nav id="main-menu" aria-label="주 메뉴" className="border-t border-white/10 px-4 pb-4 md:hidden">
           <ul className="py-2">
             {menu.map((m) => (
               <li key={m.to}>

@@ -70,7 +70,7 @@ function PostView() {
 
   return (
     <div className="space-y-8">
-      <Link to="/discussion" className="text-navy-700 underline underline-offset-4">
+      <Link to="/discussion" className="text-link">
         ← 토론 목록
       </Link>
       {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -90,9 +90,9 @@ function PostView() {
           </div>
 
           {research && (
-            <p className="mt-4 rounded bg-navy-50 px-4 py-3 text-navy-900">
+            <p className="mt-5 rounded-md border-l-4 border-navy-800 bg-navy-50 px-4 py-3 text-navy-900">
               관련 연구:{' '}
-              <Link to={`/research/${research.id}`} className="font-medium underline underline-offset-4">
+              <Link to={`/research/${research.id}`} className="text-link">
                 {research.title}
               </Link>
             </p>
@@ -147,7 +147,7 @@ function Comments({ postId }: { postId: string }) {
   }
 
   return (
-    <section aria-labelledby="comments-title" className="border-t border-gray-200 pt-8">
+    <section aria-labelledby="comments-title" className="border-t border-navy-100 pt-8">
       <h2 id="comments-title" className="section-title">
         댓글 {comments ? comments.length : ''}
       </h2>

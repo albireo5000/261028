@@ -6,13 +6,13 @@ import Tag from './Tag';
 
 export default function ResearchCard({ research }: { research: Research }) {
   return (
-    <Card className="transition-shadow hover:shadow-md">
-      <p className="text-sm text-gray-600">
+    <Card className="h-full border-t-4 border-t-navy-800 transition-shadow hover:shadow-lg hover:shadow-navy-900/5">
+      <p className="text-sm font-medium text-navy-600">
         {research.year} · {research.authors.join(', ')}
       </p>
-      <h3 className="mt-1 text-lg font-bold text-gray-900">
+      <h3 className="mt-1 text-lg font-bold leading-snug text-navy-900">
         {/* 제목 링크를 누르면 상세 화면으로 이동 */}
-        <Link to={`/research/${research.id}`} className="hover:text-navy-700 hover:underline">
+        <Link to={`/research/${research.id}`} className="hover:text-navy-700 hover:underline hover:underline-offset-4">
           {research.title}
         </Link>
       </h3>

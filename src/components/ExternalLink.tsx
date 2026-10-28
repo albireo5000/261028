@@ -14,7 +14,7 @@ export function isSafeUrl(url: string): boolean {
 export default function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
   if (!isSafeUrl(href)) return <span className="text-gray-500">{children} (링크 오류)</span>;
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-navy-700 underline underline-offset-4 hover:text-navy-900">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-link">
       {children}
       <span className="sr-only"> (새 창에서 열림)</span>
       <span aria-hidden="true"> ↗</span>

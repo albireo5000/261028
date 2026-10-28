@@ -31,7 +31,7 @@ export default function ResearchDetail() {
 
   return (
     <article>
-      <Link to="/research" className="text-navy-700 underline underline-offset-4">
+      <Link to="/research" className="text-link">
         ← 연구 목록
       </Link>
       <h1 className="page-title mt-4">{item.title}</h1>
